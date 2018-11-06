@@ -278,3 +278,33 @@ proc corr data=pca plots=matrix(histogram);
 proc glmselect data=pca plots=all seed=3;
 model shot_made_flag=prin1-prin10 / selection = stepwise(choose=CV select=CV stop=CV);
 run;
+
+/*11-5-18 */
+
+ods graphics on;
+proc logistic data=pca plots(only)=(roc(id=obs) effect);
+  model shot_made_flag (event='1') =prin1-prin10 / scale=none
+                            		clparm=wald
+                            		clodds=pl
+                            		rsquare;
+run;
+ods graphics off;
+
+
+ods graphics on;
+proc logistic data=train2 plots(only)=(roc(id=obs) effect);
+  model shot_made_flag (event='1') = shot_distance / scale=none
+                            		clparm=wald
+                            		clodds=pl
+                            		rsquare;
+run;
+ods graphics off;
+
+ods graphics on;
+proc logistic data=train2 plots(only)=(roc(id=obs) effect);
+  model shot_made_flag (event='1') = shot_distance playoffs / scale=none
+                            		clparm=wald
+                            		clodds=pl
+                            		rsquare;
+run;
+ods graphics off;
